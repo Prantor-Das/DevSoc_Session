@@ -1,5 +1,4 @@
 import express from "express";
-import cookieParser from "cookie-parser";
 import cors from "cors";
 import mongoose from "mongoose";
 import { connectDB } from "./utils/db.js";
@@ -11,7 +10,6 @@ import aiRoutes from "./routes/aiRoutes.js";
 const app = express();
 
 // Middleware
-app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(

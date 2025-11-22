@@ -1,7 +1,15 @@
 {
-  "buildCommand": "cd client && npm install --production=false && npm run build && cd ../server && npm install --production",
+  "version": 2,
+  "buildCommand": "npm run vercel-build",
   "outputDirectory": "client/dist",
-  "installCommand": "echo 'Skip root install'",
+  "installCommand": "cd api && npm install",
+  "functions": {
+    "api/*.js": {
+      "memory": 1024,
+      "maxDuration": 10,
+      "includeFiles": "server/**"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/v1/(.*)",
