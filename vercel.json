@@ -13,16 +13,6 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    {
-      "src": "/api/v1/(.*)",
-      "dest": "server/src/index.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "client/dist/$1"
-    }
-  ],
   "rewrites": [
     {
       "source": "/api/v1/(.*)",
