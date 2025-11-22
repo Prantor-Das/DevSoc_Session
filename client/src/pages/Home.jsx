@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import usePostStore from "../store/postStore";
 import useAuthStore from "../store/authStore";
 import { Link, useNavigate } from "react-router";
@@ -21,10 +22,15 @@ const Home = () => {
 		getPosts();
 	}, [getPosts]);
 
-	const handleDelete = (id) => {
+	const handleDelete = async (id) => {
 		if (window.confirm("Are you sure you want to delete this story?")) {
-			deletePost(id);
-			setSelectedPost(null);
+			try {
+				await deletePost(id);
+				setSelectedPost(null);
+				toast.success("Story deleted successfully!");
+			} catch (error) {
+				toast.error("Failed to delete story");
+			}
 		}
 	};
 
@@ -34,6 +40,10 @@ const Home = () => {
 	};
 
 	const handleSummarize = async () => {
+		if (!user) {
+			toast.error("Please login to use the summarize feature");
+			return;
+		}
 		if (!selectedPost) return;
 		setIsLoadingAI(true);
 		try {
@@ -42,14 +52,21 @@ const Home = () => {
 				content: selectedPost.content,
 			});
 			setSummary(response.data.summary);
+			toast.success("Summary generated successfully!");
 		} catch (error) {
-			alert("Failed to generate summary");
+			const errorMsg =
+				error.response?.data?.message || "Failed to generate summary";
+			toast.error(errorMsg);
 		} finally {
 			setIsLoadingAI(false);
 		}
 	};
 
 	const handleTranslate = async (language) => {
+		if (!user) {
+			toast.error("Please login to use the translate feature");
+			return;
+		}
 		if (!selectedPost) return;
 		setIsLoadingAI(true);
 		try {
@@ -60,8 +77,10 @@ const Home = () => {
 			});
 			setTranslated(response.data);
 			setShowTranslate(false);
+			toast.success(`Translated to ${language} successfully!`);
 		} catch (error) {
-			alert("Failed to translate");
+			const errorMsg = error.response?.data?.message || "Failed to translate";
+			toast.error(errorMsg);
 		} finally {
 			setIsLoadingAI(false);
 		}
@@ -114,9 +133,9 @@ const Home = () => {
 					{!user && (
 						<Link
 							to="/register"
-							className="bg-black text-white px-10 py-4 rounded-full text-lg font-medium hover:bg-zinc-900 transition-all hover:scale-102 active:scale-95 shadow-xl hover:shadow-2xl inline-block duration-200"
+							className="bg-black text-white px-10 py-3 rounded-full text-lg font-medium hover:bg-zinc-900 transition-all hover:scale-102 active:scale-95 shadow-xl hover:shadow-2xl inline-block duration-200"
 						>
-							Start Reading
+							Start Writing
 						</Link>
 					)}
 					{user && (

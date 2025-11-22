@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
+import toast from "react-hot-toast";
 import useAuthStore from "../store/authStore";
 import LoadingSpinner from "../components/LoadingSpinner";
-import Alert from "../components/Alert";
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -17,14 +17,19 @@ const Login = () => {
 		useAuthStore();
 
 	useEffect(() => {
-		if (isSuccess || user) {
+		if (isError && message) {
+			toast.error(message);
+		}
+
+		if (isSuccess && user) {
+			toast.success("Welcome back!");
 			navigate("/");
 		}
 
 		return () => {
 			reset();
 		};
-	}, [user, isSuccess, navigate, reset]);
+	}, [user, isSuccess, isError, message, navigate, reset]);
 
 	const onChange = (e) => {
 		setFormData((prevState) => ({
@@ -57,8 +62,6 @@ const Login = () => {
 				</div>
 
 				<div className="bg-white rounded-3xl shadow-xl shadow-zinc-100/50 border border-zinc-100 p-8 sm:p-10">
-					{isError && <Alert message={message} />}
-
 					<form className="space-y-6" onSubmit={onSubmit}>
 						<div>
 							<label

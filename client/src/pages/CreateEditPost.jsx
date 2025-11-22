@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
+import toast from "react-hot-toast";
 import usePostStore from "../store/postStore";
 import LoadingSpinner from "../components/LoadingSpinner";
-import Alert from "../components/Alert";
 
 const CreateEditPost = () => {
 	const [formData, setFormData] = useState({
@@ -41,11 +41,18 @@ const CreateEditPost = () => {
 	}, [id, posts, reset]);
 
 	useEffect(() => {
+		if (isError && message && isSubmitted) {
+			toast.error(message);
+		}
+
 		if (isSuccess && isSubmitted) {
+			toast.success(
+				id ? "Story updated successfully!" : "Story published successfully!",
+			);
 			reset();
 			navigate("/");
 		}
-	}, [isSuccess, isSubmitted, reset, navigate]);
+	}, [isSuccess, isError, message, isSubmitted, id, reset, navigate]);
 
 	const onChange = (e) => {
 		setFormData((prevState) => ({
@@ -83,8 +90,6 @@ const CreateEditPost = () => {
 							: "Share your ideas, knowledge, and creativity with the world."}
 					</p>
 				</div>
-
-				{isError && <Alert message={message} />}
 
 				<form
 					onSubmit={onSubmit}

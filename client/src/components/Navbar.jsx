@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router";
+import toast from "react-hot-toast";
 import useAuthStore from "../store/authStore";
 
 const Navbar = () => {
@@ -20,6 +21,7 @@ const Navbar = () => {
 	const onLogout = () => {
 		logout();
 		reset();
+		toast.success("Logged out successfully!");
 		navigate("/");
 		setMobileMenuOpen(false);
 	};

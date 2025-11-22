@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router";
+import toast from "react-hot-toast";
 import useAuthStore from "../store/authStore";
 import LoadingSpinner from "../components/LoadingSpinner";
-import Alert from "../components/Alert";
 
 const Register = () => {
 	const [formData, setFormData] = useState({
@@ -20,14 +20,19 @@ const Register = () => {
 		useAuthStore();
 
 	useEffect(() => {
-		if (isSuccess || user) {
+		if (isError && message) {
+			toast.error(message);
+		}
+
+		if (isSuccess && user) {
+			toast.success("Account created successfully!");
 			navigate("/");
 		}
 
 		return () => {
 			reset();
 		};
-	}, [user, isSuccess, navigate, reset]);
+	}, [user, isSuccess, isError, message, navigate, reset]);
 
 	const onChange = (e) => {
 		setFormData((prevState) => ({
@@ -41,7 +46,9 @@ const Register = () => {
 		e.preventDefault();
 
 		if (password !== confirmPassword) {
-			setLocalError("Passwords do not match");
+			const errorMsg = "Passwords do not match";
+			setLocalError(errorMsg);
+			toast.error(errorMsg);
 		} else {
 			const userData = {
 				name,
@@ -67,8 +74,6 @@ const Register = () => {
 				</div>
 
 				<div className="bg-white rounded-3xl shadow-xl shadow-zinc-100/50 border border-zinc-100 p-8 sm:p-10">
-					{(isError || localError) && <Alert message={localError || message} />}
-
 					<form className="space-y-5" onSubmit={onSubmit}>
 						<div>
 							<label
