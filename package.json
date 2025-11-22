@@ -11,7 +11,7 @@
     "dev:server": "cd server && npm run dev",
     "start:server": "cd server && npm start",
     "build": "cd client && npm install && npm run build && cd ../server && npm install",
-    "vercel-build": "cd client && npm install && npm run build && cd ../server && npm install"
+    "vercel-build": "cd client && npm install --include=dev && npm run build && cd ../server && npm install --omit=dev"
   },
   "keywords": ["blog", "react", "nodejs", "express", "mongodb"],
   "author": "",
