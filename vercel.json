@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run vercel-build && npm install --prefix server",
+  "buildCommand": "npm run vercel-build",
   "outputDirectory": "client/dist",
-  "installCommand": "npm install",
+  "installCommand": "echo 'Dependencies installed in build step'",
   "rewrites": [
     {
       "source": "/api/v1/(.*)",
